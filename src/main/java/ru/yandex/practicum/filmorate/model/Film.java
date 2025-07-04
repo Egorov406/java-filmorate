@@ -17,7 +17,7 @@ public class Film {
     private LocalDate releaseDate;
     private int duration;
 
-    private final static Logger log = LoggerFactory.getLogger(Film.class);
+    private static final Logger log = LoggerFactory.getLogger(Film.class);
 
     public void validate() {
         if (getName() == null || getName().isBlank()) {

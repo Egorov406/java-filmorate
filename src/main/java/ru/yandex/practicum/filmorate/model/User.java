@@ -17,7 +17,7 @@ public class User {
     private String name;
     private LocalDate birthday;
 
-    private final static Logger log = LoggerFactory.getLogger(User.class);
+    private static final Logger log = LoggerFactory.getLogger(User.class);
 
     public void validate() {
         if (getEmail() == null || getEmail().isBlank() || !getEmail().contains("@")) {
