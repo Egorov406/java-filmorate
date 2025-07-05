@@ -2,12 +2,13 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import java.time.LocalDate;
-
+@Slf4j
 @Data
 @AllArgsConstructor
 public class Film {
@@ -16,8 +17,6 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private int duration;
-
-    private static final Logger log = LoggerFactory.getLogger(Film.class);
 
     public void validate() {
         if (getName() == null || getName().isBlank()) {

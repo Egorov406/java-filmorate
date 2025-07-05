@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -7,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -15,6 +17,7 @@ public class UserController {
 
     @GetMapping
     public Collection<User> findAll() {
+        log.info("Запрос на получение всех пользователей. Количество пользователей: {}", users.size());
         return users.values();
     }
 
@@ -23,9 +26,11 @@ public class UserController {
         user.validate();
         user.setId(getNextId());
         if (user.getName() == null || user.getName().isBlank()) {
+            log.debug("Имя пользователя не указано, используется логин: {}", user.getLogin());
             user.setName(user.getLogin());
         }
         users.put(user.getId(), user);
+        log.info("Создан пользователь: {}", user);
         return user;
     }
 
@@ -36,12 +41,13 @@ public class UserController {
         userInMemory.setEmail(user.getEmail());
         userInMemory.setLogin(user.getLogin());
         if (user.getName() == null || user.getName().isBlank()) {
+            log.debug("Имя пользователя не указано при обновлении, используется логин: {}", user.getLogin());
             userInMemory.setName(user.getLogin());
         } else {
             userInMemory.setName(user.getName());
         }
         userInMemory.setBirthday(user.getBirthday());
-
+        log.info("Обновлён пользователь: {}", userInMemory);
         return user;
     }
 
@@ -51,6 +57,8 @@ public class UserController {
                 .mapToLong(id -> id)
                 .max()
                 .orElse(0);
-        return ++currentMaxId;
+        long nextId = ++currentMaxId;
+        log.debug("Сгенерирован новый ID для пользователя: {}", nextId);
+        return nextId;
     }
 }

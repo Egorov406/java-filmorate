@@ -2,12 +2,14 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import java.time.LocalDate;
 
+@Slf4j
 @Data
 @AllArgsConstructor
 public class User {
@@ -16,8 +18,6 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-
-    private static final Logger log = LoggerFactory.getLogger(User.class);
 
     public void validate() {
         if (getEmail() == null || getEmail().isBlank() || !getEmail().contains("@")) {
