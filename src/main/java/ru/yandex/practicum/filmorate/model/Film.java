@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-
 import java.time.LocalDate;
+
 @Slf4j
 @Data
 @AllArgsConstructor
