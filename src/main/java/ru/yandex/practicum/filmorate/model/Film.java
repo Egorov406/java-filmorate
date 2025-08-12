@@ -1,42 +1,32 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+
+
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-@Slf4j
+
 @Data
-@AllArgsConstructor
 public class Film {
-
     private Long id;
+
+    @NotBlank(message = "Название не может быть пустым")
     private String name;
+
+    @Size(max = 200, message = "Описание не должно превышать 200 символов")
     private String description;
+
+    @NotNull(message = "Дата релиза обязательна")
     private LocalDate releaseDate;
-    private int duration;
 
-    public void validate() {
-        if (getName() == null || getName().isBlank()) {
-            log.error("Валидация не пройдена: название фильма не может быть пустым, name={}", name);
-            throw new ValidationException("Название не может быть пустым");
-        }
+    @Positive(message = "Продолжительность должна быть положительной")
+    private Integer duration;
 
-        if (getDescription().length() > 200) {
-            log.error("Валидация не пройдена: длина описания превышает 200 символов, description.length={}", description.length());
-            throw new ValidationException("Максимальная длина описания не может быть более 200 символов");
-        }
-
-        if (getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.error("Валидация не пройдена: дата релиза не может быть ранее 28 декабря 1895 года или null, releaseDate={}", releaseDate);
-            throw new ValidationException("Дата релиза не может быть ранее 28 декабря 1895 года");
-        }
-
-        if (getDuration() < 0) {
-            log.error("Валидация не пройдена: продолжительность фильма должна быть положительным числом, duration={}", duration);
-            throw new ValidationException("Продолжительность фильма должна быть положительным числом");
-        }
-
-    }
+    private Set<Long> likes = new HashSet<>();
 }
