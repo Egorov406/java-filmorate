@@ -6,8 +6,11 @@ import org.mockito.Mockito;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.GenreService;
+import ru.yandex.practicum.filmorate.service.MpaService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
@@ -21,21 +24,30 @@ import static org.mockito.Mockito.when;
 class FilmServiceTest {
     private FilmService filmService;
     private UserService userService;
+    private MpaService mpaService;
+    private GenreService genreService;
     private Film testFilm;
+    private MpaRating testMpa;
 
     @BeforeEach
     void setUp() {
         userService = Mockito.mock(UserService.class);
-        filmService = new FilmService(new InMemoryFilmStorage(), userService);
+        mpaService = Mockito.mock(MpaService.class);
+        genreService = Mockito.mock(GenreService.class);
+        filmService = new FilmService(new InMemoryFilmStorage(), userService, genreService, mpaService);
+
+        testMpa = new MpaRating(1L, "G", "General Audiences");
 
         testFilm = new Film();
         testFilm.setName("Test Film");
         testFilm.setDescription("Test Description");
         testFilm.setReleaseDate(LocalDate.of(2000, 1, 1));
         testFilm.setDuration(120);
+        testFilm.setMpa(testMpa);
 
-        // Мокируем вызовы UserService
+        // Мокируем вызовы сервисов
         when(userService.getUserById(anyLong())).thenReturn(new User());
+        when(mpaService.getMpaRatingById(anyLong())).thenReturn(testMpa);
     }
 
     @Test
@@ -86,6 +98,7 @@ class FilmServiceTest {
         anotherFilm.setName("Another Film");
         anotherFilm.setReleaseDate(LocalDate.of(2001, 1, 1));
         anotherFilm.setDuration(90);
+        anotherFilm.setMpa(testMpa);
         filmService.createFilm(anotherFilm);
 
         List<Film> films = filmService.getAllFilms();
@@ -130,6 +143,7 @@ class FilmServiceTest {
         film2.setName("Film 2");
         film2.setReleaseDate(LocalDate.of(2001, 1, 1));
         film2.setDuration(90);
+        film2.setMpa(testMpa);
         Film createdFilm2 = filmService.createFilm(film2);
 
         filmService.addLike(film1.getId(), 1L);
@@ -148,6 +162,7 @@ class FilmServiceTest {
             film.setName("Film " + i);
             film.setReleaseDate(LocalDate.of(2000 + i, 1, 1));
             film.setDuration(90 + i);
+            film.setMpa(testMpa);
             filmService.createFilm(film);
         }
 
@@ -181,5 +196,4 @@ class FilmServiceTest {
     void deleteFilm_ShouldThrowException_WhenFilmNotFound() {
         assertThrows(NotFoundException.class, () -> filmService.deleteFilm(999L));
     }
-
 }

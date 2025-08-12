@@ -8,13 +8,16 @@ import lombok.Data;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 @Data
 public class Film {
     private Long id;
+    private Set<Long> likes = new HashSet<>();
 
     @NotBlank(message = "Название не может быть пустым")
     private String name;
@@ -28,5 +31,14 @@ public class Film {
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
 
-    private Set<Long> likes = new HashSet<>();
+    private List<Genre> genres = new ArrayList<>();
+    private MpaRating mpa;
+
+    public void addLike(Long userId) {
+        likes.add(userId);
+    }
+
+    public void removeLike(Long userId) {
+        likes.remove(userId);
+    }
 }
