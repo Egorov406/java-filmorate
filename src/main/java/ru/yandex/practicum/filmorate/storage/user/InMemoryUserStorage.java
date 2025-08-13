@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Profile("memory")
 @Component
 public class InMemoryUserStorage implements UserStorage {
-    private final HashMap<Long, User> users = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
     private Long id = 1L;
     private static final String WRONG_ID = "неверный номер ID";
 

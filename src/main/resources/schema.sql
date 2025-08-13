@@ -8,20 +8,20 @@ DROP TABLE IF EXISTS genres CASCADE;
 DROP TABLE IF EXISTS mpa_ratings CASCADE;
 
 -- Создание таблицы возрастных рейтингов (MPA)
-CREATE TABLE mpa_ratings (
+CREATE TABLE IF NOT EXISTS mpa_ratings (
     mpa_id SERIAL PRIMARY KEY,
     mpa_name VARCHAR(10) NOT NULL UNIQUE,
     description VARCHAR(200)
 );
 
 -- Создание таблицы жанров
-CREATE TABLE genres (
+CREATE TABLE IF NOT EXISTS genres (
     genre_id SERIAL PRIMARY KEY,
     genre_name VARCHAR(20) NOT NULL UNIQUE
 );
 
 -- Создание таблицы фильмов
-CREATE TABLE films (
+CREATE TABLE IF NOT EXISTS films (
     film_id SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     description TEXT,
@@ -36,7 +36,7 @@ CREATE INDEX idx_films_release_date ON films(release_date);
 CREATE INDEX idx_films_mpa_id ON films(mpa_id);
 
 -- Создание таблицы связи фильмов и жанров
-CREATE TABLE film_genres (
+CREATE TABLE IF NOT EXISTS film_genres (
     film_id INTEGER NOT NULL REFERENCES films(film_id) ON DELETE CASCADE,
     genre_id INTEGER NOT NULL REFERENCES genres(genre_id) ON DELETE CASCADE,
     PRIMARY KEY (film_id, genre_id)
@@ -46,7 +46,7 @@ CREATE TABLE film_genres (
 CREATE INDEX idx_film_genres_genre_id ON film_genres(genre_id);
 
 -- Создание таблицы пользователей
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE CHECK (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),
     login VARCHAR(50) NOT NULL UNIQUE,
@@ -60,7 +60,7 @@ CREATE INDEX idx_users_birthday ON users(birthday);
 CREATE INDEX idx_users_login ON users(login);
 
 -- Создание таблицы лайков фильмов
-CREATE TABLE film_likes (
+CREATE TABLE IF NOT EXISTS film_likes (
     film_id INTEGER NOT NULL REFERENCES films(film_id) ON DELETE CASCADE,
     user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -72,7 +72,7 @@ CREATE INDEX idx_film_likes_user_id ON film_likes(user_id);
 CREATE INDEX idx_film_likes_created_at ON film_likes(created_at);
 
 -- Создание таблицы дружеских связей
-CREATE TABLE friendships (
+CREATE TABLE IF NOT EXISTS friendships (
     user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     friend_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     status VARCHAR(10) DEFAULT 'pending' NOT NULL CHECK (status IN ('pending', 'confirmed')),

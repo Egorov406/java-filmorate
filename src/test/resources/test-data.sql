@@ -1,11 +1,11 @@
 -- Очистка всех данных
-DELETE FROM film_likes;
-DELETE FROM film_genres;
-DELETE FROM films;
-DELETE FROM friendships;
-DELETE FROM users;
-DELETE FROM genres;
-DELETE FROM mpa_ratings;
+DELETE FROM IF EXISTS film_likes;
+DELETE FROM IF EXISTS film_genres;
+DELETE FROM IF EXISTS films;
+DELETE FROM IF EXISTS friendships;
+DELETE FROM IF EXISTS users;
+DELETE FROM IF EXISTS genres;
+DELETE FROM IF EXISTS mpa_ratings;
 
 -- Сброс sequence
 ALTER TABLE mpa_ratings ALTER COLUMN mpa_id RESTART WITH 1;
